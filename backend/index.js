@@ -9,7 +9,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "*", 
+    origin: "https://glistening-dolphin-9ed2a7.netlify.app", 
     methods: ["GET", "POST"]
   }
 });
