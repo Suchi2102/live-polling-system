@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 
 // The URL of our backend server
-const URL = 'http://localhost:3001';
+const URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
 // Create the socket instance
 const socket = io(URL, {
