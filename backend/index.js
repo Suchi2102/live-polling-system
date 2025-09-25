@@ -2,27 +2,20 @@ const express = require('express');
 const http = require('http');
 const { Server } = require("socket.io");
 const cors = require('cors');
+const path = require('path'); // <-- Add this line
 
 const app = express();
-
-// --- THIS IS THE CRITICAL FIX ---
-// We are telling Express to also allow connections from your Netlify site
-app.use(cors({
-  origin: "https://glistening-dolphin-9ed2a7.netlify.app"
-}));
-// ------------------------------------
+app.use(cors());
 
 const server = http.createServer(app);
+const io = new Server(server);
 
-const io = new Server(server, {
-  cors: {
-    origin: "https://glistening-dolphin-9ed2a7.netlify.app", 
-    methods: ["GET", "POST"]
-  }
-});
+// --- Add these lines to serve the frontend ---
+const frontendBuildPath = path.join(__dirname, '..', 'frontend', 'dist');
+app.use(express.static(frontendBuildPath));
+// ---------------------------------------------
 
 // ... The rest of your index.js file is exactly the same ...
-
 let currentPoll = null;
 let pollResults = {};
 let studentCount = 0;
@@ -31,7 +24,6 @@ let pollTimer = null;
 
 io.on('connection', (socket) => {
   console.log(`A user connected: ${socket.id}`);
-
   socket.on('create_poll', (pollData) => {
     if (pollTimer) clearTimeout(pollTimer);
     currentPoll = pollData;
@@ -47,7 +39,6 @@ io.on('connection', (socket) => {
       io.emit('poll_results', pollResults);
     }, 60000);
   });
-
   socket.on('submit_answer', (data) => {
     const { answer } = data;
     if (currentPoll && pollResults.hasOwnProperty(answer)) {
@@ -61,7 +52,6 @@ io.on('connection', (socket) => {
       }
     }
   });
-
   socket.on('disconnect', () => {
     console.log(`User disconnected: ${socket.id}`);
   });

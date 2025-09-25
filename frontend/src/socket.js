@@ -1,11 +1,9 @@
 import { io } from 'socket.io-client';
 
-// The URL of our backend server
-const URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
-
-// Create the socket instance
-const socket = io(URL, {
-  autoConnect: false // We will connect manually when needed
+// This simple version tells the frontend to connect to the
+// same server that it was loaded from. No full URL is needed.
+const socket = io({
+  autoConnect: false
 });
 
 export default socket;
