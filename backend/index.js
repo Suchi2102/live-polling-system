@@ -2,18 +2,17 @@ const express = require('express');
 const http = require('http');
 const { Server } = require("socket.io");
 const cors = require('cors');
-const path = require('path'); // <-- Add this line
 
 const app = express();
 app.use(cors());
 
 const server = http.createServer(app);
-const io = new Server(server);
-
-// --- Add these lines to serve the frontend ---
-const frontendBuildPath = path.join(__dirname, '..', 'frontend', 'dist');
-app.use(express.static(frontendBuildPath));
-// ---------------------------------------------
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
 
 // ... The rest of your index.js file is exactly the same ...
 let currentPoll = null;
@@ -58,6 +57,6 @@ io.on('connection', (socket) => {
 });
 
 const PORT = 3001;
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT} 🚀`);
+server.listen(PORT, 'localhost', () => {
+  console.log(`Server is running on localhost:${PORT} 🚀`);
 });

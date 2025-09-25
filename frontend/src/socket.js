@@ -1,8 +1,7 @@
 import { io } from 'socket.io-client';
 
-// This simple version tells the frontend to connect to the
-// same server that it was loaded from. No full URL is needed.
-const socket = io({
+// Connect to the backend server running on port 3001
+const socket = io('http://localhost:3001', {
   autoConnect: false
 });
 
