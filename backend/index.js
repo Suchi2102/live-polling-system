@@ -2,20 +2,20 @@ const express = require('express');
 const http = require('http');
 const { Server } = require("socket.io");
 const cors = require('cors');
-const path = require('path'); // <-- Add this line
 
 const app = express();
-app.use(cors());
+app.use(cors()); // Use the cors middleware for Express
 
 const server = http.createServer(app);
-const io = new Server(server);
 
-// --- Add these lines to serve the frontend ---
-const frontendBuildPath = path.join(__dirname, '..', 'frontend', 'dist');
-app.use(express.static(frontendBuildPath));
-// ---------------------------------------------
+// We will set the specific origin for socket.io
+const io = new Server(server, {
+  cors: {
+    origin: "*", // We will update this with the Netlify URL later
+    methods: ["GET", "POST"]
+  }
+});
 
-// ... The rest of your index.js file is exactly the same ...
 let currentPoll = null;
 let pollResults = {};
 let studentCount = 0;
@@ -24,6 +24,7 @@ let pollTimer = null;
 
 io.on('connection', (socket) => {
   console.log(`A user connected: ${socket.id}`);
+
   socket.on('create_poll', (pollData) => {
     if (pollTimer) clearTimeout(pollTimer);
     currentPoll = pollData;
@@ -39,6 +40,7 @@ io.on('connection', (socket) => {
       io.emit('poll_results', pollResults);
     }, 60000);
   });
+
   socket.on('submit_answer', (data) => {
     const { answer } = data;
     if (currentPoll && pollResults.hasOwnProperty(answer)) {
@@ -52,6 +54,7 @@ io.on('connection', (socket) => {
       }
     }
   });
+
   socket.on('disconnect', () => {
     console.log(`User disconnected: ${socket.id}`);
   });
