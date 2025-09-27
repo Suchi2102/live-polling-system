@@ -10,7 +10,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "*", // Allows all connections for now
+    origin: "*", // Allows all connections
     methods: ["GET", "POST"]
   }
 });

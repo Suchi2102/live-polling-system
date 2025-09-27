@@ -1,5 +1,5 @@
 import React from 'react';
-import '../App.css'; // We'll add styles to this file
+import '../App.css';
 
 function ResultsDisplay({ question, results }) {
   const totalVotes = Object.values(results).reduce((sum, count) => sum + count, 0);

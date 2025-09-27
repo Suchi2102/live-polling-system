@@ -44,6 +44,7 @@
 .join-screen button:hover {
   background-color: #2b6cb0;
 }
+
 .teacher-screen {
   width: 500px;
   padding: 2rem;
@@ -145,6 +146,13 @@
   background-color: #4299e1;
   border-radius: 4px;
 }
+.timer {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #c53030;
+  margin-bottom: 1rem;
+}
+
 .ask-new-button {
   margin-top: 1.5rem;
   padding: 0.75rem 1.5rem;
@@ -157,10 +165,4 @@
 }
 .ask-new-button:hover {
   background-color: #38a169;
-}
-.timer {
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: #c53030;
-  margin-bottom: 1rem;
 }

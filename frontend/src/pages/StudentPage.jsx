@@ -9,19 +9,18 @@ function StudentPage() {
   const [poll, setPoll] = useState(null);
   const [hasVoted, setHasVoted] = useState(false);
   const [results, setResults] = useState(null);
-  const [timeLeft, setTimeLeft] = useState(null); // <-- New state for the timer
+  const [timeLeft, setTimeLeft] = useState(null);
 
-  // This new useEffect handles the countdown logic
   useEffect(() => {
     if (timeLeft === 0) {
-      setTimeLeft(null); // Reset timer when it hits 0
+      setTimeLeft(null);
       return;
     }
-    if (!timeLeft) return; // Do nothing if there's no timer
+    if (!timeLeft) return;
     const intervalId = setInterval(() => {
       setTimeLeft(timeLeft - 1);
     }, 1000);
-    return () => clearInterval(intervalId); // Cleanup the interval
+    return () => clearInterval(intervalId);
   }, [timeLeft]);
 
   useEffect(() => {
@@ -31,12 +30,12 @@ function StudentPage() {
       setResults(null);
       setHasVoted(false);
       setPoll(pollData);
-      setTimeLeft(pollData.duration); // <-- Start the timer
+      setTimeLeft(pollData.duration);
     }
     function onPollResults(resultsData) {
       setResults(resultsData);
-      setPoll(null); // Clear the poll to be ready for the next one
-      setTimeLeft(null); // Clear the timer
+      setPoll(null);
+      setTimeLeft(null);
     }
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
@@ -53,19 +52,35 @@ function StudentPage() {
   const handleJoin = () => { if (name.trim()) { socket.auth = { username: name }; socket.connect(); } else { alert("Please enter your name!"); } };
   const handleVote = (option) => { socket.emit('submit_answer', { answer: option }); setHasVoted(true); };
 
-  // --- RENDER LOGIC (mostly unchanged, just added the timer display) ---
-
   if (results) {
-    return <div className="app-container"><ResultsDisplay question={results.question || poll?.question} results={results.results || results} /></div>;
+    return <div className="app-container"><ResultsDisplay question={currentPoll?.question} results={results} /></div>;
   }
   if (!isConnected) {
-    return ( <div className="app-container"><div className="join-screen"><h2>Join Live Poll</h2><input type="text" placeholder="Enter your name" value={name} onChange={(e) => setName(e.target.value)} /><button onClick={handleJoin}>Join</button></div></div> );
+    return (
+      <div className="app-container">
+        <div className="join-screen">
+          <h2>Join Live Poll</h2>
+          <input type="text" placeholder="Enter your name" value={name} onChange={(e) => setName(e.target.value)} />
+          <button onClick={handleJoin}>Join</button>
+        </div>
+      </div>
+    );
   }
   if (!poll) {
-    return ( <div className="app-container"><h2>Welcome, {socket.auth?.username}! 👋</h2><p>You are connected. Please wait for the teacher to start the poll.</p></div> );
+    return (
+      <div className="app-container">
+        <h2>Welcome, {socket.auth?.username}! 👋</h2>
+        <p>You are connected. Please wait for the teacher to start the poll.</p>
+      </div>
+    );
   }
   if (hasVoted) {
-    return ( <div className="app-container"><h2>Thank you for voting!</h2><p>Waiting for the results...</p></div> );
+    return (
+       <div className="app-container">
+          <h2>Thank you for voting!</h2>
+          <p>Waiting for the results...</p>
+        </div>
+    );
   }
   return (
     <div className="app-container">

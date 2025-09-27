@@ -27,7 +27,7 @@ function TeacherPage() {
       if (optionsArray.length < 2) { alert("Please provide at least two options."); return; }
       const pollData = { question, options: optionsArray };
       socket.emit('create_poll', pollData);
-      setCurrentQuestion(question);
+      setCurrentQuestion(question); // Save the question text
       setResults(null);
       setQuestion('');
       setOptions('');

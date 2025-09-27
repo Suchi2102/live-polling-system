@@ -1,8 +1,8 @@
 import { io } from 'socket.io-client';
 
-// This simple version tells the frontend to connect to the
-// same server that it was loaded from. No full URL is needed.
-const socket = io({
+const URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+
+const socket = io(URL, {
   autoConnect: false
 });
 
