@@ -4,14 +4,13 @@ const { Server } = require("socket.io");
 const cors = require('cors');
 
 const app = express();
-app.use(cors()); // Use the cors middleware for Express
+app.use(cors());
 
 const server = http.createServer(app);
 
-// We will set the specific origin for socket.io
 const io = new Server(server, {
   cors: {
-    origin: "*", // We will update this with the Netlify URL later
+    origin: "*", // Allows all connections for now
     methods: ["GET", "POST"]
   }
 });
